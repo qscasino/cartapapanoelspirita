@@ -1,1 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta a Papá Noel - Spirita</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #8B1538 0%, #5a0e24 50%, #8B1538 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 10px 40px;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* Estrellas de fondo */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Preloader */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #8B1538 0%, #5a0e24 50%, #8B1538 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .preloader-logo {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 40px;
+      animation: pulse 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    .progress-bar-container {
+      width: 300px;
+      height: 8px;
+      background: rgba(255, 215, 0, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #FFD700, #FFF4CC, #FFD700);
+      background-size: 200% 100%;
+      border-radius: 10px;
+      width: 0%;
+      animation: loadProgress 2s ease-out forwards, shimmerBar 1.5s linear infinite;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
+
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes shimmerBar {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      color: #FFD700;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    /* Contenedor principal */
+    .main-container {
+      position: relative;
+      z-index: 10;
+      max-width: 600px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .layout-wrapper {
+      position: relative;
+      transform-origin: top center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    .logo {
+      max-width: 150px;
+      height: auto;
+      margin: 0 auto 20px auto;
+      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+      display: block;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d5016 0%, #4a7c28 50%, #2d5016 100%);
+      color: #FFD700;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow:
+        0 4px 15px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 900;
+      color: #FFD700;
+      text-shadow:
+        2px 2px 4px rgba(0,0,0,0.5),
+        0 0 30px rgba(255, 215, 0, 0.5);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      color: #fff;
+      font-weight: 400;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      margin-bottom: 5px;
+    }
+
+    /* Sobre */
+    .envelope-container {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto 10px;
+      perspective: 1000px;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: linear-gradient(135deg, #C41E3A, #8B1538);
+      border-radius: 16px;
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      transform-style: preserve-3d;
+      animation: floatEnvelope 3s ease-in-out infinite;
+      overflow: visible;
+    }
+
+    @keyframes floatEnvelope {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 45%;
+      background: linear-gradient(135deg, #8B1538, #5a0e24);
+      border-radius: 16px 16px 0 0;
+      transform-origin: top center;
+      transition: transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 2;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    .envelope-flap::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: calc(100% / 2) solid transparent;
+      border-right: calc(100% / 2) solid transparent;
+      border-top: 90px solid #FFD700;
+      opacity: 0.3;
+    }
+
+    .envelope.opening .envelope-flap {
+      transform: rotateX(-180deg);
+    }
+
+    .envelope-seal {
+      position: absolute;
+      top: 44%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, #FFD700, #FFA500);
+      border-radius: 50%;
+      border: 3px solid #8B1538;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: opacity 0.5s ease;
+    }
+
+    .envelope.opening .envelope-seal {
+      opacity: 0;
+    }
+
+    /* Carta interior */
+    .letter {
+      position: absolute;
+      top: 54%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      height: 86%;
+      background: linear-gradient(to bottom, #FFF9E6, #FFF4CC);
+      border-radius: 14px;
+      padding: 18px 16px 18px;
+      box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 1s ease 1s, transform 1s ease 1s;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .envelope.opening .letter {
+      opacity: 1;
+      transform: translate(-50%, -50%) translateY(-10px);
+    }
+
+    .letter-header {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      color: #8B1538;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .letter-content {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .letter-sign {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(0.7rem, 2vw, 0.8rem);
+      color: #333;
+      text-align: right;
+      font-style: italic;
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+
+    .prize-reveal {
+      background: linear-gradient(135deg, #8B1538 0%, #C41E3A 50%, #8B1538 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease infinite;
+      color: #FFD700;
+      padding: 16px 14px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow:
+        0 8px 30px rgba(139, 21, 56, 0.6),
+        0 0 40px rgba(255, 215, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      margin-bottom: 8px;
+      border: 3px solid #FFD700;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .prize-reveal::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+      );
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .prize-label {
+      font-size: clamp(0.65rem, 2vw, 0.8rem);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      opacity: 0.95;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .prize-label::before,
+    .prize-label::after {
+      content: '⭐';
+      margin: 0 4px;
+    }
+
+    .prize-value {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 6vw, 2.5rem);
+      font-weight: 900;
+      text-shadow:
+        3px 3px 6px rgba(0,0,0,0.4),
+        0 0 20px rgba(255, 215, 0, 0.6);
+      animation: prizeGlow 2s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 2px;
+    }
+
+    @keyframes prizeGlow {
+      0%, 100% {
+        transform: scale(1);
+        text-shadow:
+          3px 3px 6px rgba(0,0,0,0.4),
+          0 0 20px rgba(255, 215, 0, 0.6);
+      }
+      50% {
+        transform: scale(1.05);
+        text-shadow:
+          3px 3px 6px rgba(0,0,0,0.4),
+          0 0 30px rgba(255, 215, 0, 0.9),
+          0 0 40px rgba(255, 215, 0, 0.5);
+      }
+    }
+
+    .accept-btn {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #8B1538;
+      border: none;
+      border-radius: 50px;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .accept-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 25px rgba(255, 215, 0, 0.7);
+    }
+
+    .accept-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 20000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #8B1538, #5a0e24);
+      padding: 40px 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+      border: 3px solid #FFD700;
+      animation: modalBounce 0.5s ease;
+    }
+
+    @keyframes modalBounce {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      color: #FFD700;
+      margin-bottom: 15px;
+      font-weight: 900;
+    }
+
+    .modal-text {
+      color: #fff;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .modal-close-btn {
+      padding: 12px 40px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #8B1538;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      z-index: 15000;
+      pointer-events: none;
+    }
+
+    @keyframes confettiFall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        overflow-y: hidden; /* en móvil todo entra en pantalla, sin scroll */
+      }
+
+      .envelope-container {
+        max-width: 360px;
+      }
+
+      .letter {
+        height: 88%;
+        padding: 16px 14px;
+      }
+
+      .prize-reveal {
+        padding: 14px 12px;
+      }
+
+      .letter-content {
+        font-size: clamp(0.65rem, 2vw, 0.75rem);
+        line-height: 1.4;
+      }
+
+      .prize-label {
+        font-size: 0.65rem;
+      }
+
+      .accept-btn {
+        padding: 9px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Estrellas de fondo -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <img src="assets/image.png" alt="Arkana Games" class="preloader-logo">
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <p class="loading-text">Cargando carta...</p>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main-container">
+    <div class="layout-wrapper" id="layoutWrapper">
+      <div class="header">
+        <img src="assets/image.png" alt="Arkana Games" class="logo" id="logo">
+        <div class="badge">🎄 PROMOCIÓN ESPECIAL DE NAVIDAD 🎄</div>
+        <h1 class="title">Carta a Papá Noel</h1>
+        <p class="subtitle">Papá Noel ha llegado con un regalo especial para ti</p>
+      </div>
+
+      <!-- Sobre con carta -->
+      <div class="envelope-container">
+        <div class="envelope" id="envelope">
+          <div class="envelope-flap"></div>
+          <div class="envelope-seal">🎅</div>
+          <div class="letter" id="letter">
+            <h2 class="letter-header">Querido jugador,</h2>
+            <p class="letter-content">
+              Has demostrado una gran energía este año, y eso merece una recompensa especial.
+              ¡Disfruta tu premio y sigue teniendo suerte!
+            </p>
+            <p class="letter-sign">
+              Con cariño,<br>
+              <strong>Papá Noel 🎅</strong>
+            </p>
+            <div class="prize-reveal">
+              <div class="prize-label">Tu premio de hoy</div>
+              <div class="prize-value" id="prizeText">---</div>
+            </div>
+            <button class="accept-btn" id="acceptBtn">Reclamar Premio</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="modal-icon">🎁</div>
+      <h2 class="modal-title">¡Premio Reclamado!</h2>
+      <p class="modal-text">Tu premio ha sido registrado exitosamente. ¡Vuelve mañana para otro regalo!</p>
+      <button class="modal-close-btn" id="modalCloseBtn">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- 🎵 Audios -->
+  <audio id="bgAudio" src="assets/background-music.mp3" preload="auto" playsinline></audio>
+  <audio id="openSound" src="assets/sfx-paperflip5.mp3" preload="auto" playsinline></audio>
+  <audio id="claimSound" src="assets/prize-sound.mp3" preload="auto" playsinline></audio>
+
+  <script>
+    // 🔑 Prefijo propio para Arkana
+    const LS_PREFIX = 'arkanaCartaPapaNoel_';
+
+    // Escalado para que todo quepa en la pantalla
+    function scaleLayout() {
+      const wrapper = document.getElementById('layoutWrapper');
+      if (!wrapper) return;
+
+      // reset escala
+      wrapper.style.transform = 'scale(1)';
+
+      const vh = window.innerHeight;
+      const available = vh - 20; // margen
+
+      const rect = wrapper.getBoundingClientRect();
+      const needed = rect.height;
+
+      if (needed > available) {
+        const scale = available / needed;
+        wrapper.style.transform = `scale(${scale})`;
+      }
+    }
+
+    // Estrellas de fondo
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // Sistema de premios ponderados
+    function pickWeighted(options) {
+      const total = options.reduce((sum, opt) => sum + opt.weight, 0);
+      let rand = Math.random() * total;
+
+      for (let opt of options) {
+        if (rand < opt.weight) return opt.value;
+        rand -= opt.weight;
+      }
+      return options[0].value;
+    }
+
+    const premios = [
+      { value: 'BONO 100%', weight: 40 },
+      { value: 'BONO 150%', weight: 30 },
+      { value: 'BONO 200%', weight: 15 },
+      { value: 'BONO A ELECCIÓN', weight: 10 },
+      { value: 'BONO SORPRESA', weight: 5 }
+    ];
+
+    // Confetti
+    function createConfetti() {
+      const colors = ['#FFD700', '#FFA500', '#FF6347', '#00FF00', '#1E90FF', '#FF69B4'];
+      for (let i = 0; i < 120; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = -10 + 'px';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animation = `confettiFall ${2 + Math.random() * 3}s linear forwards`;
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    // LocalStorage Arkana
+    function haClaimadoHoy() {
+      const lastClaim = localStorage.getItem(LS_PREFIX + 'lastClaimDate');
+      const today = new Date().toDateString();
+      return lastClaim === today;
+    }
+
+    function guardarReclamo(premio) {
+      const today = new Date().toDateString();
+      localStorage.setItem(LS_PREFIX + 'lastClaimDate', today);
+      localStorage.setItem(LS_PREFIX + 'lastPrize', premio);
+    }
+
+    function obtenerPremioGuardado() {
+      return localStorage.getItem(LS_PREFIX + 'lastPrize');
+    }
+
+    function resetPremio() {
+      localStorage.removeItem(LS_PREFIX + 'lastClaimDate');
+      localStorage.removeItem(LS_PREFIX + 'lastPrize');
+      location.reload();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'r') {
+        if (confirm('¿Reiniciar el premio? (solo para pruebas)')) {
+          resetPremio();
+        }
+      }
+    });
+
+    // Inicialización
+    createStars();
+
+    const preloader = document.getElementById('preloader');
+    const envelope = document.getElementById('envelope');
+    const prizeText = document.getElementById('prizeText');
+    const acceptBtn = document.getElementById('acceptBtn');
+    const modal = document.getElementById('modal');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+    const bgAudio = document.getElementById('bgAudio');
+    const openSound = document.getElementById('openSound');
+    const claimSound = document.getElementById('claimSound');
+
+    let premio = '';
+    let yaReclamo = false;
+
+    // Preloader
+    setTimeout(() => {
+      preloader.classList.add('hidden');
+
+      // Música de fondo
+      bgAudio.volume = 0.4;
+      bgAudio.play().catch(() => {
+        console.log('Autoplay bloqueado');
+      });
+
+      // Abrir carta automáticamente
+      setTimeout(() => {
+        if (haClaimadoHoy()) {
+          premio = obtenerPremioGuardado();
+          yaReclamo = true;
+          acceptBtn.textContent = 'Ya Reclamado Hoy';
+          acceptBtn.style.opacity = '0.6';
+          acceptBtn.style.cursor = 'not-allowed';
+        } else {
+          premio = pickWeighted(premios);
+        }
+
+        prizeText.textContent = premio;
+
+        // Sonido de carta abriéndose
+        openSound.currentTime = 0;
+        openSound.play().catch(() => {});
+
+        envelope.classList.add('opening');
+        createConfetti();
+
+        // Escalar después de que la carta se abre
+        setTimeout(scaleLayout, 1200);
+      }, 1000);
+    }, 2000);
+
+    // Botón de aceptar premio
+    acceptBtn.addEventListener('click', () => {
+      if (yaReclamo) {
+        alert('Ya has reclamado tu premio de hoy. Vuelve mañana para otro regalo.');
+        return;
+      }
+
+      guardarReclamo(premio);
+
+      // Pausar música de fondo y reproducir sonido de reclamo
+      bgAudio.pause();
+      claimSound.currentTime = 0;
+      claimSound.play().catch(() => {});
+
+      modal.classList.add('active');
+      createConfetti();
+
+      yaReclamo = true;
+      acceptBtn.textContent = 'Ya Reclamado Hoy';
+      acceptBtn.style.opacity = '0.6';
+      acceptBtn.style.cursor = 'not-allowed';
+    });
+
+    // Cerrar modal
+    function cerrarModal() {
+      modal.classList.remove('active');
+
+      // Parar sonido de reclamo
+      claimSound.pause();
+      claimSound.currentTime = 0;
+
+      // Volver a la música de fondo
+      bgAudio.play().catch(() => {});
+    }
+
+    modalCloseBtn.addEventListener('click', cerrarModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        cerrarModal();
+      }
+    });
+
+    // Recalcular escala al cambiar tamaño / orientación
+    window.addEventListener('resize', scaleLayout);
+    window.addEventListener('orientationchange', scaleLayout);
+  </script>
+</body>
+</html>
